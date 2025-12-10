@@ -20,21 +20,32 @@
       <canvas id="gameCanvas"></canvas>
     </div>
 
-    <!-- Màn hình Play Button -->
-    <div id="playButton">
-      <div class="play-button-content">
-        <h2>Pac-Man</h2>
-        <button id="startButton">Bắt Đầu</button>
+    <!-- Màn hình Start Screen - Retro Style -->
+    <div id="playButton" class="retro-screen">
+      <div class="retro-content">
+        <h1 class="retro-title">PAC-MAN</h1>
+        <p class="press-start">PRESS START</p>
+        <button id="startButton" class="retro-button">START</button>
       </div>
     </div>
 
-    <!-- Màn hình Game Over -->
-    <div id="gameOverScreen">
-      <div class="game-over-content">
-        <h2>GAME OVER</h2>
-        <p>Bạn đã hết mạng!</p>
-        <p class="final-score">Final Score: <span id="finalScore">0</span></p>
-        <button id="restartButton">Chơi Lại</button>
+    <!-- Màn hình Game Over - Retro Style -->
+    <div id="gameOverScreen" class="retro-screen">
+      <div class="retro-content">
+        <h1 class="retro-title game-over-title">GAME OVER</h1>
+        <p class="final-score">FINAL SCORE</p>
+        <p class="score-value"><span id="finalScore">0</span></p>
+        <button id="restartButton" class="retro-button">PLAY AGAIN</button>
+      </div>
+    </div>
+
+    <!-- Màn hình Chiến Thắng - Retro Style -->
+    <div id="victoryScreen" class="retro-screen">
+      <div class="retro-content">
+        <h1 class="retro-title victory-title">VICTORY!</h1>
+        <p class="final-score">FINAL SCORE</p>
+        <p class="score-value"><span id="victoryScore">0</span></p>
+        <button id="victoryRestartButton" class="retro-button">PLAY AGAIN</button>
       </div>
     </div>
 
@@ -43,7 +54,9 @@
     <script src="js/Global.js"></script>
     <script src="js/GridUtils.js"></script>
     <script src="js/Pacman.js"></script>
-    <script src="js/Ghosts.js"></script>
+    <script src="js/Ghosts/GhostAI.js"></script>
+    <script src="js/Ghosts/Ghosts.js"></script>
+    <script src="js/GhostTimer.js"></script>
     <script src="js/Game.js"></script>
   </body>
 </html>

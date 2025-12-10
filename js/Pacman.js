@@ -47,11 +47,21 @@ function updatePacman() {
     pacMan.y = nextY;
   }
 
-  // 4. Ăn điểm
-  if (currentMap[pacMan.y][pacMan.x] === 0) {
+  // 4. Ăn điểm và power pellet
+  const currentCell = currentMap[pacMan.y][pacMan.x];
+  if (currentCell === 0) {
+    // Ăn kẹo thường
     currentMap[pacMan.y][pacMan.x] = 3;
     score += 10;
     document.getElementById("scoreDisplay").textContent = `Score: ${score}`;
+  } else if (currentCell === POWER_PELLET_VALUE) {
+    // Ăn power pellet (kẹo lớn)
+    currentMap[pacMan.y][pacMan.x] = 3;
+    score += 50;
+    document.getElementById("scoreDisplay").textContent = `Score: ${score}`;
+    
+    // Kích hoạt Frightened mode cho tất cả ghosts
+    activateFrightenedMode();
   }
 }
 
