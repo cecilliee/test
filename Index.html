@@ -3,28 +3,45 @@
   <head>
     <meta charset="utf-8" />
     <title>Pac-Man</title>
-    <style>
-      body {
-        background: #222;
-        color: #fff;
-        text-align: center;
-        font-family: sans-serif;
-      }
-      canvas {
-        background: black;
-        margin: 10px auto;
-        display: block;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <h1>Pac-Man</h1>
     <h2 id="scoreDisplay">Score: 0</h2>
-    <canvas id="gameCanvas"></canvas>
+    <div class="game-container">
+      <div class="lives-panel">
+        <h3>Lives</h3>
+        <div class="lives-display">
+          <span class="lives-count" id="livesCount">3</span>
+          <span>x</span>
+          <div class="hearts-container" id="heartsContainer"></div>
+        </div>
+      </div>
+      <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <!-- Màn hình Play Button -->
+    <div id="playButton">
+      <div class="play-button-content">
+        <h2>Pac-Man</h2>
+        <button id="startButton">Bắt Đầu</button>
+      </div>
+    </div>
+
+    <!-- Màn hình Game Over -->
+    <div id="gameOverScreen">
+      <div class="game-over-content">
+        <h2>GAME OVER</h2>
+        <p>Bạn đã hết mạng!</p>
+        <p class="final-score">Final Score: <span id="finalScore">0</span></p>
+        <button id="restartButton">Chơi Lại</button>
+      </div>
+    </div>
 
     <!-- LOAD THEO THỨ TỰ NÀY -->
     <script src="js/Map/Map.js"></script>
     <script src="js/Global.js"></script>
+    <script src="js/GridUtils.js"></script>
     <script src="js/Pacman.js"></script>
     <script src="js/Ghosts.js"></script>
     <script src="js/Game.js"></script>

@@ -10,6 +10,8 @@ let currentWallColor = "#09f";
 let score = 0;
 let gameOver = false;
 let gameInterval = null;
+let gameStarted = false; // Trạng thái game đã bắt đầu chưa
+let lives = 3; // Số mạng của PacMan
 
 // --- LOAD HÌNH ẢNH ---
 const pacImages = {
@@ -35,3 +37,7 @@ ghostImages.pink.src = "../assets/pinkGhost.png";
 ghostImages.orange.src = "../assets/orangeGhost.png";
 ghostImages.blue.src = "../assets/blueGhost.png";
 ghostImages.scared.src = "../assets/scaredGhost.png";
+
+// Hình ảnh mạng
+const heartImage = new Image();
+heartImage.src = "../assets/player-heart.png";

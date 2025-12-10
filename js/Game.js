@@ -24,6 +24,12 @@ function startGame() {
   // 1. Reset Loop
   if (gameInterval) clearInterval(gameInterval);
 
+  // Ẩn màn hình game-over và play button nếu đang hiển thị
+  hideGameOverScreen();
+  hidePlayButton();
+
+  gameStarted = true;
+
   // 2. Chọn Map Ngẫu Nhiên (Logic cũ của bạn)
   const totalMaps = MAPS.length;
   let shown = [];
@@ -48,8 +54,10 @@ function startGame() {
 
   // 3. Reset State
   score = 0;
+  lives = 3; // Reset số mạng
   gameOver = false;
   document.getElementById("scoreDisplay").textContent = `Score: 0`;
+  updateLivesDisplay(); // Cập nhật hiển thị mạng
 
   // Resize Canvas
   canvas.width = currentMap[0].length * TILE_SIZE;
@@ -74,17 +82,52 @@ function startGame() {
 }
 
 function gameLoop() {
-  if (gameOver) return;
+  if (gameOver || !gameStarted) return;
   update();
   draw();
 }
 
 function update() {
   updatePacman(); // Logic Pacman nằm ở file Pacman.js
-  // updateGhosts(); // Logic Ma sẽ thêm sau
+  updateGhosts(); // Logic Ma sử dụng BFS
+
+  // Kiểm tra va chạm giữa PacMan và Ghosts
+  for (let ghost of ghosts) {
+    if (pacMan.x === ghost.x && pacMan.y === ghost.y) {
+      // Va chạm xảy ra
+      lives--;
+      if (lives <= 0) {
+        gameOver = true;
+        showGameOverScreen();
+        return;
+      } else {
+        // Reset vị trí PacMan
+        const spawn = findRandomSpawnPoint(currentMap);
+        pacMan.x = spawn.x;
+        pacMan.y = spawn.y;
+        pacMan.dx = 0;
+        pacMan.dy = 0;
+        pacMan.nextDx = 0;
+        pacMan.nextDy = 0;
+        pacMan.rotation = "right";
+        currentMap[pacMan.y][pacMan.x] = 3;
+
+        // Reset vị trí Ghosts
+        ghosts = spawnGhosts(currentMap);
+
+        // Cập nhật hiển thị mạng
+        updateLivesDisplay();
+      }
+    }
+  }
 }
 
 function draw() {
+  // Kiểm tra map có dữ liệu không
+  if (!currentMap || currentMap.length === 0 || !currentMap[0]) {
+    return; // Không vẽ nếu map chưa được khởi tạo
+  }
+
   // Xóa màn hình
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const rows = currentMap.length;
@@ -124,6 +167,31 @@ function draw() {
   // Vẽ thực thể
   drawPacman();
   drawGhosts();
+
+  // Cập nhật hiển thị mạng (lives) ở panel bên trái
+  updateLivesDisplay();
+}
+
+function updateLivesDisplay() {
+  const livesCountEl = document.getElementById("livesCount");
+  const heartsContainer = document.getElementById("heartsContainer");
+
+  // Cập nhật số mạng
+  if (livesCountEl) {
+    livesCountEl.textContent = lives;
+  }
+
+  // Cập nhật hình tim
+  if (heartsContainer) {
+    heartsContainer.innerHTML = "";
+    for (let i = 0; i < lives; i++) {
+      const heartImg = document.createElement("img");
+      heartImg.src = heartImage.src;
+      heartImg.className = "heart-icon";
+      heartImg.alt = "Heart";
+      heartsContainer.appendChild(heartImg);
+    }
+  }
 }
 
 // --- SỰ KIỆN INPUT ---
@@ -149,10 +217,60 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+// --- MÀN HÌNH GAME OVER ---
+function showGameOverScreen() {
+  const gameOverScreen = document.getElementById("gameOverScreen");
+  const finalScoreEl = document.getElementById("finalScore");
+  finalScoreEl.textContent = score;
+  gameOverScreen.classList.add("show");
+  gameStarted = false; // Dừng game loop
+}
+
+function hideGameOverScreen() {
+  const gameOverScreen = document.getElementById("gameOverScreen");
+  gameOverScreen.classList.remove("show");
+}
+
+function showPlayButton() {
+  const playButton = document.getElementById("playButton");
+  if (playButton) {
+    playButton.classList.add("show");
+  }
+}
+
+function hidePlayButton() {
+  const playButton = document.getElementById("playButton");
+  if (playButton) {
+    playButton.classList.remove("show");
+  }
+}
+
 // Khởi chạy khi DOM load xong
 document.addEventListener("DOMContentLoaded", () => {
   canvas = document.getElementById("gameCanvas");
   ctx = canvas.getContext("2d");
   scoreEl = document.getElementById("scoreDisplay");
-  startGame();
+
+  // Event listener cho nút restart
+  const restartButton = document.getElementById("restartButton");
+  restartButton.addEventListener("click", () => {
+    hideGameOverScreen();
+    // Hiển thị play button thay vì tự động start game
+    showPlayButton();
+  });
+
+  // Event listener cho nút start
+  const startButton = document.getElementById("startButton");
+  if (startButton) {
+    startButton.addEventListener("click", () => {
+      hidePlayButton();
+      startGame();
+    });
+  }
+
+  // Khởi tạo hiển thị mạng
+  updateLivesDisplay();
+
+  // Hiển thị nút Play thay vì tự động start game
+  showPlayButton();
 });
